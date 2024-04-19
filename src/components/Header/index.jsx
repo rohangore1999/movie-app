@@ -5,7 +5,7 @@ import Logo from "../Logo";
 
 const Header = () => {
   return (
-    <header className="bg-[#232323]">
+    <header className="sticky z-50 top-0 bg-[#232323]">
       <div className="p-5">
         <Logo />
       </div>
