@@ -1,19 +1,24 @@
 import React from "react";
-import { basePath } from "../../../constants/common";
+
+// Constants
+import { basePathImage } from "../../../constants/common";
 
 const MovieCard = ({ data }) => {
-  console.log({ data });
-  console.log(`${basePath}${data.poster_path}`);
   return (
-    <div className="flex justify-center">
-      <div>
-        <img
-          className="object-contain"
-          src={`${basePath}${data.poster_path}`}
-        />
-        <div>{data.original_title}</div>
+    <>
+      <div className="flex justify-center">
+        <div>
+          <img
+            className="object-contain"
+            height={300}
+            width={300}
+            alt={data.original_title}
+            src={`${basePathImage}${data.poster_path}`}
+          />
+          <div>{data.original_title}</div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
