@@ -6,7 +6,7 @@ import Title from "../../../components/Title/Title";
 
 const MovieCards = ({ title, movieData }) => {
   return (
-    <div className="flex flex-col mt-24 first:mt-0">
+    <div className="flex flex-col mt-24 first:mt-0 ">
       <Title>{title}</Title>
 
       <div className="grid grid-cols-2 gap-5 mt-5">
