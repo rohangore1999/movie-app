@@ -1,5 +1,5 @@
 export const basePathImage = "https://image.tmdb.org/t/p/original";
-export const apiKey = "2dca580c2a14b55200e784d157207b4d"
+export const apiKey = "2dca580c2a14b55200e784d157207b4d";
 
 // https://image.tmdb.org/t/p/w500
 
@@ -27,3 +27,9 @@ export const apiKey = "2dca580c2a14b55200e784d157207b4d"
 
 // https://developer.themoviedb.org/docs/image-basics
 // https://www.themoviedb.org/talk/5a847d179251410a8900f4f3
+
+// ------------------------------------------------------------------------
+
+// For cast (actors) and crew (directors). [see at end] 
+// 550 is movie Id
+// https://api.themoviedb.org/3/movie/550?api_key=2dca580c2a14b55200e784d157207b4d&language=en-US&append_to_response=credits

@@ -4,7 +4,7 @@ import React from "react";
 import movieFlixLogo from "../../images/moviesflix-logo.jpg";
 
 const Logo = () => {
-  return <img src={movieFlixLogo} width={200} />;
+  return <img src={movieFlixLogo} width={150} />;
 };
 
 export default Logo;

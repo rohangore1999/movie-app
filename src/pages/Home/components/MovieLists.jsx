@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import _get from "lodash/get";
 import _find from "lodash/find";
 
@@ -8,6 +8,9 @@ import MovieCards from "./MovieCards";
 // Services
 import { getMovies } from "../../../services/movies";
 
+// Context
+import { Context } from "../../../context/Context";
+
 const MovieLists = () => {
   const [movieData, setMovieData] = useState([]);
   const [year, setYear] = useState(2012);
@@ -15,9 +18,11 @@ const MovieLists = () => {
   const sentinelTopRef = useRef(null);
   const sentinelBottomRef = useRef(null);
 
+  const { data: selectedGenre } = useContext(Context);
+
   useEffect(() => {
-    fetchData(year);
-  }, [year]);
+    fetchData(year, selectedGenre);
+  }, [year, selectedGenre]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleIntersect, {
@@ -63,13 +68,16 @@ const MovieLists = () => {
     });
   };
 
-  const fetchData = async (year) => {
+  const fetchData = async (year, selectedGenre) => {
+    // TODO: check if we can handle already movie fetch should not call [not sure]
     // To checking if movie is already fetched
-    if (_find(movieData, { year: year })) {
-      return;
-    }
+    // if (_find(movieData, { year: year })) {
+    //   return;
+    // }
 
-    const data = await getMovies(year);
+    const queryObj = { with_genres: selectedGenre };
+
+    const data = await getMovies(year, queryObj);
 
     setMovieData((prevData) => {
       if (
@@ -87,15 +95,12 @@ const MovieLists = () => {
         )
       ) {
         // If current year is more then prepend the data (scroll up)
-
         return [{ year, data: [..._get(data, "results", [])] }, ...prevData];
       }
 
       return [{ year, data: _get(data, "results", []) }];
     });
   };
-
-  console.log({ movieData });
 
   return (
     <>
