@@ -17,8 +17,14 @@ const MovieLists = () => {
 
   const sentinelTopRef = useRef(null);
   const sentinelBottomRef = useRef(null);
+  const scrollRef = useRef(null);
 
   const { data: selectedGenre } = useContext(Context);
+
+  useEffect(() => {
+    // Scroll to a specific position when the page is reloaded
+    // window.scrollTo({ top: 50, behavior: "smooth" });
+  }, []); // This effect runs only once after the component mounts
 
   useEffect(() => {
     fetchData(year, selectedGenre);
@@ -105,14 +111,12 @@ const MovieLists = () => {
   return (
     <>
       <div
-        className="mb-20 text-white z-50 absolute top-0 border border-1 w-full"
+        className="mb-20 z-50 absolute top-0 border border-1 w-full"
         id="sentinel-top"
         ref={sentinelTopRef}
-      >
-        Here
-      </div>
+      />
 
-      <section className="p-5 mt-10">
+      <section className="p-5 mt-10" ref={scrollRef}>
         {movieData.map((movie) => (
           <MovieCards title={movie.year} movieData={movie.data} />
         ))}
