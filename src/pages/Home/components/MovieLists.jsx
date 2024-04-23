@@ -27,12 +27,15 @@ const MovieLists = () => {
 
   const { data: selectedGenre } = useContext(Context);
 
-  const previousSelectedGenre = useRef(selectedGenre);
-
   useEffect(() => {
     // Scroll to a specific position when the page is reloaded
     if (scrollDirection === "down") {
-      window.scrollTo({ top: 50 });
+      window.scrollTo({ top: 50, behavior: "smooth" });
+    }
+
+    if (scrollDirection === "up") {
+      const newPosition = window.scrollY + 500; // Scroll down by 50 pixels
+      window.scrollTo({ top: newPosition, behavior: "smooth" }); // Optionally, add smooth scrolling behavior
     }
   }); // This effect runs only once after the component mounts
 
@@ -156,13 +159,9 @@ const MovieLists = () => {
         {movieData.map((movie) => (
           <MovieCards title={movie.year} movieData={movie.data} />
         ))}
-
-        <div
-          className="invisible"
-          id="sentinel-bottom"
-          ref={sentinelBottomRef}
-        />
       </section>
+
+      <div className="invisible" id="sentinel-bottom" ref={sentinelBottomRef} />
     </>
   );
 };

@@ -15,6 +15,7 @@
     "react-dom": "^18.2.0",
     "react-responsive-carousel": "^3.2.22",
     "react-router-dom": "6.15.0",
+    "react-window": "^1.8.10",
     "vite-plugin-checker": "^0.6.4",
     "web-vitals": "^2.1.4"
   },
