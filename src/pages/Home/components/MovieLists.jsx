@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 import _get from "lodash/get";
 import _find from "lodash/find";
 import _debounce from "lodash/debounce";
+import _isEmpty from "lodash/isEmpty";
 
 // Components
 import MovieCards from "./MovieCards";
@@ -15,25 +16,29 @@ import Loader from "../../../components/Loader";
 
 const MovieLists = () => {
   const [movieData, setMovieData] = useState([]);
-
-  // TODO: Make year as [2012], so that when user scroll up and down will take year[] 1st or last element so that will have a track of year which has been fetch.
-  // now as it is a string when you scroll up and then try to scroll down it is trying to fetch the same year again as we dont have a track of it.
   const [year, setYear] = useState(2012);
   const [loading, setLoading] = useState(false);
-  const [scrollDirection, setScrollDirection] = useState(null);
+  const [scrollDirection, setScrollDirection] = useState("down");
 
   const sentinelTopRef = useRef(null);
   const sentinelBottomRef = useRef(null);
   const scrollRef = useRef(null);
+  const yearListRef = useRef([2012]);
 
   const { data: selectedGenre } = useContext(Context);
 
+  const previousSelectedGenre = useRef(selectedGenre);
+
   useEffect(() => {
     // Scroll to a specific position when the page is reloaded
-    // window.scrollTo({ top: 50 });
+    if (scrollDirection === "down") {
+      window.scrollTo({ top: 50 });
+    }
   }); // This effect runs only once after the component mounts
 
   useEffect(() => {
+    setLoading(true);
+
     fetchData(year, selectedGenre);
   }, [year, selectedGenre]);
 
@@ -78,27 +83,32 @@ const MovieLists = () => {
         // Check for element isIntersecting: true
         if (entry.target.id === "sentinel-top") {
           // check for target id
-          setYear((prevYear) => +prevYear + 1);
+          const nextYear = yearListRef.current[0] + 1;
+
           setScrollDirection("down");
+
+          if (!yearListRef.current.includes(nextYear)) {
+            yearListRef.current = [nextYear, ...yearListRef.current];
+            setYear(nextYear);
+          }
         }
 
         if (entry.target.id === "sentinel-bottom") {
-          setYear((prevYear) => +prevYear - 1);
+          const prevYear =
+            yearListRef.current[yearListRef.current.length - 1] - 1;
+
           setScrollDirection("up");
+
+          if (!yearListRef.current.includes(prevYear)) {
+            yearListRef.current = [...yearListRef.current, prevYear];
+            setYear(prevYear);
+          }
         }
       }
     });
   };
 
   const fetchData = async (year, selectedGenre) => {
-    // TODO: check if we can handle already movie fetch should not call [not sure]
-    // To checking if movie is already fetched
-    if (_find(movieData, { year: year })) {
-      return;
-    }
-
-    setLoading(true);
-
     const queryObj = { with_genres: selectedGenre };
 
     const data = await getMovies(year, queryObj);
@@ -128,12 +138,13 @@ const MovieLists = () => {
     setLoading(false);
   };
 
-  console.log({ movieData, year, scrollDirection });
+  console.log({ movieData, scrollDirection, selectedGenre });
+  console.log("yearListRef.current >> ", yearListRef.current);
 
   return (
     <>
       <div
-        className="mb-20 z-50 absolute top-0 border border-1 w-full"
+        className="mb-20 z-50 absolute top-0"
         id="sentinel-top"
         ref={sentinelTopRef}
       />
