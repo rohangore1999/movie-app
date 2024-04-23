@@ -139,7 +139,7 @@ const MovieLists = () => {
   };
 
   console.log({ movieData, scrollDirection, selectedGenre });
-  console.log("yearListRef.current >> ", yearListRef.current);
+  console.log("yearListRef.current >>> ", yearListRef.current);
 
   return (
     <>
