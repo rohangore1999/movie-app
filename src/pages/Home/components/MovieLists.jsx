@@ -149,7 +149,8 @@ const MovieLists = () => {
         ref={sentinelTopRef}
       />
 
-      {loading && scrollDirection === "down" && <Loader />}
+      {/* Enable loader */}
+      {loading && <Loader />}
 
       <section className="p-5 mt-10" ref={scrollRef}>
         {movieData.map((movie) => (
