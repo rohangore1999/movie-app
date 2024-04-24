@@ -7,7 +7,7 @@ const Dropdown = ({ text, options }) => {
   const [state, setstate] = useState(false);
   const [selected, setSelected] = useState([]);
 
-  const { setData } = useContext(Context);
+  const { setData, dispatch } = useContext(Context);
 
   const handleSelected = (e, option) => {
     const isChecked = e.target.checked;
@@ -34,6 +34,7 @@ const Dropdown = ({ text, options }) => {
       .map((updatedSelectedObj) => updatedSelectedObj.value);
 
     setData(selectedGenreId);
+    dispatch({ type: "GENRE", payload: selectedGenreId });
   };
 
   return (

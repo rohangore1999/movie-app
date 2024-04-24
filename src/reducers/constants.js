@@ -1,0 +1,4 @@
+export const ACTION_TYPES = {
+  GENRE: "GENRE",
+  SEARCHED_MOVIE: "SEARCHED_MOVIE",
+};

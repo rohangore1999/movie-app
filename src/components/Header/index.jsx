@@ -3,6 +3,7 @@ import React from "react";
 // Components
 import Logo from "../Logo";
 import Dropdown from "../Dropdown";
+import SearchBox from "../SearchBox";
 
 // Constants
 import { dropDownGenresOptions } from "../../constants/genres";
@@ -15,7 +16,11 @@ const Header = () => {
           <Logo />
         </div>
 
-        <Dropdown text="Genre" options={dropDownGenresOptions} />
+        <div className="flex items-center">
+          <Dropdown text="Genre" options={dropDownGenresOptions} />
+
+          <SearchBox />
+        </div>
       </div>
     </header>
   );

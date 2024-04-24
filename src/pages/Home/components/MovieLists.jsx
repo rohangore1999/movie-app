@@ -30,7 +30,7 @@ const MovieLists = () => {
   useEffect(() => {
     // Scroll to a specific position when the page is reloaded
     if (scrollDirection === "down") {
-      window.scrollTo({ top: 50, behavior: "smooth" });
+      window.scrollTo({ top: 50 });
     }
 
     if (scrollDirection === "up") {
@@ -159,9 +159,13 @@ const MovieLists = () => {
         {movieData.map((movie) => (
           <MovieCards title={movie.year} movieData={movie.data} />
         ))}
-      </section>
 
-      <div className="invisible" id="sentinel-bottom" ref={sentinelBottomRef} />
+        <div
+          className="invisible"
+          id="sentinel-bottom"
+          ref={sentinelBottomRef}
+        />
+      </section>
     </>
   );
 };
