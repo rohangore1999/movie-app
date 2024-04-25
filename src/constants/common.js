@@ -35,4 +35,4 @@ export const apiKey = "2dca580c2a14b55200e784d157207b4d";
 // https://api.themoviedb.org/3/movie/550?api_key=2dca580c2a14b55200e784d157207b4d&language=en-US&append_to_response=credits
 
 // For search
-// https://api.themoviedb.org/3/search/movie?api_key=2dca580c2a14b55200e784d157207b4d&query=Avenger
+// https://api.themoviedb.org/3/search/movie?api_key=2dca580c2a14b55200e784d157207b4d&query=Avenger?page=1

@@ -8,7 +8,7 @@ import _isEmpty from "lodash/isEmpty";
 import MovieCards from "./MovieCards";
 
 // Services
-import { getMovies } from "../../../services/movies";
+import { getMovieBySearch, getMovies } from "../../../services/movies";
 
 // Context
 import { Context } from "../../../context/Context";
@@ -16,16 +16,21 @@ import Loader from "../../../components/Loader";
 
 const MovieLists = () => {
   const [movieData, setMovieData] = useState([]);
+  const [searchedMovieData, setSearchedMovieData] = useState([]);
   const [year, setYear] = useState(2012);
   const [loading, setLoading] = useState(false);
   const [scrollDirection, setScrollDirection] = useState("down");
+  const [pageNo, setPageNo] = useState(1);
 
   const sentinelTopRef = useRef(null);
   const sentinelBottomRef = useRef(null);
   const scrollRef = useRef(null);
   const yearListRef = useRef([2012]);
+  const movieRef = useRef(null);
 
-  const { data: selectedGenre } = useContext(Context);
+  const { data: selectedGenre, state } = useContext(Context);
+  const { searchedMovie } = state;
+  console.log({ searchedMovie });
 
   useEffect(() => {
     // Scroll to a specific position when the page is reloaded
@@ -42,8 +47,15 @@ const MovieLists = () => {
   useEffect(() => {
     setLoading(true);
 
+    if (!!searchedMovie) {
+      movieRef.current = searchedMovie;
+      fetchSearchedMovie(searchedMovie, pageNo);
+
+      return;
+    }
+
     fetchData(year, selectedGenre);
-  }, [year, selectedGenre]);
+  }, [year, selectedGenre, searchedMovie, pageNo]);
 
   useEffect(() => {
     const debounceHandleIntersect = _debounce(handleIntersect, 1000);
@@ -83,6 +95,7 @@ const MovieLists = () => {
   const handleIntersect = (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
+        debugger;
         // Check for element isIntersecting: true
         if (entry.target.id === "sentinel-top") {
           // check for target id
@@ -97,6 +110,13 @@ const MovieLists = () => {
         }
 
         if (entry.target.id === "sentinel-bottom") {
+          if (!!movieRef.current) {
+            console.log("in bottom");
+            setPageNo(pageNo + 1);
+
+            return;
+          }
+
           const prevYear =
             yearListRef.current[yearListRef.current.length - 1] - 1;
 
@@ -109,6 +129,21 @@ const MovieLists = () => {
         }
       }
     });
+  };
+
+  const fetchSearchedMovie = async (searchQuery, pageNo) => {
+    const data = await getMovieBySearch(searchQuery, pageNo);
+
+    setSearchedMovieData((previousSearchedMovieData) => {
+      debugger;
+      return [
+        {
+          year: "Movie Results",
+          data: _get(data, "results", []),
+        },
+      ];
+    });
+    setLoading(false);
   };
 
   const fetchData = async (year, selectedGenre) => {
@@ -141,9 +176,7 @@ const MovieLists = () => {
     setLoading(false);
   };
 
-  console.log({ movieData, scrollDirection, selectedGenre });
-  console.log("yearListRef.current >>> ", yearListRef.current);
-
+  console.log({ searchedMovieData });
   return (
     <>
       <div

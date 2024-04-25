@@ -18,3 +18,15 @@ export const getMovies = async (year, queryObj) => {
     return error;
   }
 };
+
+export const getMovieBySearch = async (searchQuery, pageNo) => {
+  try {
+    const response = await http.get(
+      `search/movie?api_key=${apiKey}&query=${searchQuery}&page=${pageNo}`
+    );
+
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+
+// Context
+import { Context } from "../../context/Context";
+
+// Icons
 import { FaSearch } from "react-icons/fa";
 
 const SearchBox = () => {
   const [inputValue, setInputValue] = useState("");
+  const { dispatch } = useContext(Context);
+
   const handleChange = (e) => {
     const { value } = e.target;
 
     setInputValue(value);
+    dispatch({ type: "SEARCHED_MOVIE", payload: value });
   };
 
   return (

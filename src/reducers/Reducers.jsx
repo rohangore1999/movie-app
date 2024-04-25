@@ -1,3 +1,4 @@
+// Constants
 import { ACTION_TYPES } from "./constants";
 
 export const initialState = {
@@ -6,12 +7,14 @@ export const initialState = {
 };
 
 export const Reducers = (previousState, action) => {
-  debugger;
   switch (action.type) {
     case ACTION_TYPES.GENRE:
-      return [...previousState.selectedGenre, action.payload];
+      return {
+        ...previousState,
+        selectedGenre: [...previousState.selectedGenre, action.payload],
+      };
 
     case ACTION_TYPES.SEARCHED_MOVIE:
-      return (previousState.selectedGenre = searchedMovie);
+      return { ...previousState, searchedMovie: action.payload };
   }
 };
