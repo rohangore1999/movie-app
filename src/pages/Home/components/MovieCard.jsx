@@ -42,7 +42,7 @@ const MovieCard = ({ data }) => {
             <span className="text-gray-100">Genre: </span>
 
             {data?.genre_ids.map((genreId, index) => (
-              <p className="text-gray-400 font-semibold">
+              <p key={index} className="text-gray-400 font-semibold">
                 &nbsp;
                 {GENRES_MAPPING[genreId]}
                 {index !== data?.genre_ids?.length - 1 && " | "}

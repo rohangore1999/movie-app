@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+  Fragment,
+} from "react";
 import _get from "lodash/get";
 import _find from "lodash/find";
 import _debounce from "lodash/debounce";
@@ -13,6 +19,15 @@ import { getMovieBySearch, getMovies } from "../../../services/movies";
 // Context
 import { Context } from "../../../context/Context";
 import Loader from "../../../components/Loader";
+import EmptyPage from "../../../components/EmptyPage";
+
+// It should not create multiple instance
+const debouncedFetchSearchedMovie = _debounce(
+  async (fetchFunction, searchQuery, pageNo) => {
+    await fetchFunction(searchQuery, pageNo);
+  },
+  300
+);
 
 const MovieLists = () => {
   const [movieData, setMovieData] = useState([]);
@@ -20,6 +35,7 @@ const MovieLists = () => {
   const [year, setYear] = useState(2012);
   const [loading, setLoading] = useState(false);
   const [scrollDirection, setScrollDirection] = useState("down");
+  const [isScrolled, setIsScrolled] = useState(false);
   const [pageNo, setPageNo] = useState(1);
 
   const sentinelTopRef = useRef(null);
@@ -27,14 +43,14 @@ const MovieLists = () => {
   const scrollRef = useRef(null);
   const yearListRef = useRef([2012]);
   const movieRef = useRef(null);
+  const pageRef = useRef(1);
 
   const { data: selectedGenre, state } = useContext(Context);
   const { searchedMovie } = state;
-  console.log({ searchedMovie });
 
   useEffect(() => {
     // Scroll to a specific position when the page is reloaded
-    if (scrollDirection === "down") {
+    if (scrollDirection === "down" && !searchedMovie) {
       window.scrollTo({ top: 50 });
     }
 
@@ -48,8 +64,11 @@ const MovieLists = () => {
     setLoading(true);
 
     if (!!searchedMovie) {
+      setIsScrolled(false);
+
       movieRef.current = searchedMovie;
-      fetchSearchedMovie(searchedMovie, pageNo);
+
+      debouncedFetchSearchedMovie(fetchSearchedMovie, searchedMovie, pageNo);
 
       return;
     }
@@ -58,7 +77,7 @@ const MovieLists = () => {
   }, [year, selectedGenre, searchedMovie, pageNo]);
 
   useEffect(() => {
-    const debounceHandleIntersect = _debounce(handleIntersect, 1000);
+    const debounceHandleIntersect = _debounce(handleIntersect, 1500);
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -95,7 +114,6 @@ const MovieLists = () => {
   const handleIntersect = (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        debugger;
         // Check for element isIntersecting: true
         if (entry.target.id === "sentinel-top") {
           // check for target id
@@ -111,8 +129,10 @@ const MovieLists = () => {
 
         if (entry.target.id === "sentinel-bottom") {
           if (!!movieRef.current) {
-            console.log("in bottom");
-            setPageNo(pageNo + 1);
+            setIsScrolled(true);
+
+            pageRef.current += 1;
+            setPageNo(pageRef.current);
 
             return;
           }
@@ -133,15 +153,11 @@ const MovieLists = () => {
 
   const fetchSearchedMovie = async (searchQuery, pageNo) => {
     const data = await getMovieBySearch(searchQuery, pageNo);
-
     setSearchedMovieData((previousSearchedMovieData) => {
-      debugger;
-      return [
-        {
-          year: "Movie Results",
-          data: _get(data, "results", []),
-        },
-      ];
+      if (isScrolled) {
+        return [...previousSearchedMovieData, ..._get(data, "results", [])];
+      }
+      return _get(data, "results", []);
     });
     setLoading(false);
   };
@@ -176,7 +192,10 @@ const MovieLists = () => {
     setLoading(false);
   };
 
-  console.log({ searchedMovieData });
+  if (!!searchedMovie && !loading && _isEmpty(searchedMovieData)) {
+    return <EmptyPage />;
+  }
+
   return (
     <>
       <div
@@ -188,10 +207,19 @@ const MovieLists = () => {
       {/* Enable loader */}
       {loading && <Loader />}
 
-      <section className="p-5 mt-10" ref={scrollRef}>
-        {movieData.map((movie) => (
-          <MovieCards title={movie.year} movieData={movie.data} />
-        ))}
+      <section
+        className={`p-5 ${searchedMovie ? "mt-0" : "mt-10"}`}
+        ref={scrollRef}
+      >
+        {!!searchedMovie ? (
+          <MovieCards title="Searched Movie" movieData={searchedMovieData} />
+        ) : (
+          movieData.map((movie, idx) => (
+            <Fragment key={idx}>
+              <MovieCards title={movie.year} movieData={movie.data} />
+            </Fragment>
+          ))
+        )}
 
         <div
           className="invisible"

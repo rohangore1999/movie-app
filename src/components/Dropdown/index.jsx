@@ -38,7 +38,7 @@ const Dropdown = ({ text, options }) => {
   };
 
   return (
-    <div className="inline-block relative w-40 text-center">
+    <div className="inline-block relative w-24 text-center">
       <button
         onClick={() => setstate(!state)}
         className=" font-semibold py-2 px-4 rounded inline-flex items-center"
@@ -60,7 +60,10 @@ const Dropdown = ({ text, options }) => {
         }`}
       >
         {options.map((option) => (
-          <li className="last:rounded-b bg-[#303030] py-2 px-4 block whitespace-no-wrap text-left">
+          <li
+            key={option.key}
+            className="last:rounded-b bg-[#303030] py-2 px-4 block whitespace-no-wrap text-left"
+          >
             <div className="flex items-center justify-between gap-2">
               <input
                 type="checkbox"

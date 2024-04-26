@@ -5,6 +5,7 @@ import { Context } from "../../context/Context";
 
 // Icons
 import { FaSearch } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 
 const SearchBox = () => {
   const [inputValue, setInputValue] = useState("");
@@ -14,7 +15,14 @@ const SearchBox = () => {
     const { value } = e.target;
 
     setInputValue(value);
+
     dispatch({ type: "SEARCHED_MOVIE", payload: value });
+  };
+
+  const handleClear = () => {
+    setInputValue("");
+
+    dispatch({ type: "SEARCHED_MOVIE", payload: "" });
   };
 
   return (
@@ -26,7 +34,14 @@ const SearchBox = () => {
         value={inputValue}
       />
 
-      <FaSearch className="absolute text-black top-2 right-1" />
+      {inputValue ? (
+        <IoClose
+          className="absolute text-black top-2 right-1 hover:scale-150 hover:cursor-pointer "
+          onClick={handleClear}
+        />
+      ) : (
+        <FaSearch className="absolute text-black top-2 right-1" />
+      )}
     </div>
   );
 };
