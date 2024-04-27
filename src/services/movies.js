@@ -30,3 +30,15 @@ export const getMovieBySearch = async (searchQuery, pageNo) => {
     return error;
   }
 };
+
+export const getGenreList = async () => {
+  try {
+    const response = await http.get(
+      `genre/movie/list?api_key=${apiKey}&language=en`
+    );
+
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

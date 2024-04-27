@@ -192,6 +192,7 @@ const MovieLists = () => {
     setLoading(false);
   };
 
+  // Load "No Result Found Screen"
   if (!!searchedMovie && !loading && _isEmpty(searchedMovieData)) {
     return <EmptyPage />;
   }

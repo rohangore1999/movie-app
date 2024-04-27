@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 
 // Components
 import Logo from "../Logo";
 import Dropdown from "../Dropdown";
 import SearchBox from "../SearchBox";
 
-// Constants
-import { dropDownGenresOptions } from "../../constants/genres";
+// Context
+import { Context } from "../../context/Context";
+import { modifyGenresList } from "./helpers";
 
 const Header = () => {
+  const { state } = useContext(Context);
+  const { genresList } = state;
+
+  const dropDownGenresOptions = modifyGenresList(genresList);
+
   return (
     <header className="sticky z-50 top-0 bg-[#232323]">
       <div className="p-5 flex items-center justify-between">

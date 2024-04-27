@@ -3,6 +3,9 @@ import React, { useContext, useState } from "react";
 // Context
 import { Context } from "../../context/Context";
 
+// Constants
+import { ACTION_TYPES } from "../../reducers/constants";
+
 const Dropdown = ({ text, options }) => {
   const [state, setstate] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -34,7 +37,8 @@ const Dropdown = ({ text, options }) => {
       .map((updatedSelectedObj) => updatedSelectedObj.value);
 
     setData(selectedGenreId);
-    dispatch({ type: "GENRE", payload: selectedGenreId });
+
+    dispatch({ type: ACTION_TYPES.GENRE, payload: selectedGenreId });
   };
 
   return (

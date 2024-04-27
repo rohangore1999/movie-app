@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 // Constants
 import { basePathImage } from "../../../constants/common";
-import { GENRES_MAPPING } from "../../../constants/genres";
+
+// Context
+import { Context } from "../../../context/Context";
+
+// Helpers
+import { getGenresMapping } from "../helpers";
 
 const MovieCard = ({ data }) => {
+  const { state } = useContext(Context);
+  const { genresList } = state;
+
+  const GENRES_MAPPING = getGenresMapping(genresList);
+
   const [showOverview, setShowOverview] = useState(false);
 
   const handleMouseEnter = () => {

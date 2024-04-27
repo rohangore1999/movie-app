@@ -36,3 +36,6 @@ export const apiKey = "2dca580c2a14b55200e784d157207b4d";
 
 // For search
 // https://api.themoviedb.org/3/search/movie?api_key=2dca580c2a14b55200e784d157207b4d&query=Avenger?page=1
+
+// For Genre
+// https://api.themoviedb.org/3/genre/movie/list?api_key=2dca580c2a14b55200e784d157207b4d&language=en

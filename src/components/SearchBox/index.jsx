@@ -7,6 +7,9 @@ import { Context } from "../../context/Context";
 import { FaSearch } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
+// Constants
+import { ACTION_TYPES } from "../../reducers/constants";
+
 const SearchBox = () => {
   const [inputValue, setInputValue] = useState("");
   const { dispatch } = useContext(Context);
@@ -16,13 +19,13 @@ const SearchBox = () => {
 
     setInputValue(value);
 
-    dispatch({ type: "SEARCHED_MOVIE", payload: value });
+    dispatch({ type: ACTION_TYPES.SEARCHED_MOVIE, payload: value });
   };
 
   const handleClear = () => {
     setInputValue("");
 
-    dispatch({ type: "SEARCHED_MOVIE", payload: "" });
+    dispatch({ type: ACTION_TYPES.SEARCHED_MOVIE, payload: "" });
   };
 
   return (
