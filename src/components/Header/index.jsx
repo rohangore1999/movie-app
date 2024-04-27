@@ -19,12 +19,12 @@ const Header = () => {
 
   return (
     <header className="sticky z-50 top-0 bg-[#232323]">
-      <div className="p-5 flex items-center justify-between">
+      <div className="p-5 flex items-center justify-between md:px-64">
         <div>
           <Logo />
         </div>
 
-        <div className="flex items-center">
+        <div className="flex items-center md:space-x-20">
           <Dropdown text="Genre" options={dropDownGenresOptions} />
 
           <SearchBox />

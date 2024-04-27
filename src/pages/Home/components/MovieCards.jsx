@@ -9,7 +9,7 @@ const MovieCards = ({ title, movieData }) => {
     <div className={`flex flex-col mt-24 first:mt-0`}>
       <Title>{title}</Title>
 
-      <div className="grid grid-cols-2 gap-5 mt-5">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mt-5">
         {movieData?.map((data, index) => (
           <MovieCard data={data} key={index} />
         ))}

@@ -30,10 +30,10 @@ const SearchBox = () => {
   };
 
   return (
-    <div className="relative rounded overflow-hidden flex ">
+    <div className="relative rounded overflow-hidden flex">
       <input
         type="text"
-        className="pr-6 pl-1 py-2 text-black w-32 h-8"
+        className="pr-6 pl-1 py-2 text-black w-32 h-8 md:w-64 z-50"
         onChange={handleChange}
         value={inputValue}
       />

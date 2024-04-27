@@ -31,12 +31,13 @@ const MovieCard = ({ data }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={() => setShowOverview(!showOverview)}
-      className="flex justify-center relative flex-shrink-0 cursor-pointer transform hover:scale-105 transition duration-200 ease-out hover:drop-shadow-lg"
+      className="flex  justify-center relative flex-shrink-0 cursor-pointer transform hover:scale-105 transition duration-200 ease-out 
+     "
     >
       <div
         className={`absolute inset-0 bg-gradient-to-b ${
           showOverview
-            ? "backdrop-blur-xl"
+            ? "backdrop-blur-xl from-gray-200/50 via-gray-800/80 to-gray-900/100"
             : "from-gray-200/10 via-gray-800/50 to-gray-900/100"
         } z-10`}
       />
@@ -62,7 +63,7 @@ const MovieCard = ({ data }) => {
       </div>
 
       {showOverview && (
-        <div className="absolute top-1 p-1 text-xs font-bold z-50 overflow-y-scroll h-60">
+        <div className="absolute top-1 p-1 text-xs font-bold z-50 overflow-y-scroll h-60 md:p-5 md:text-base">
           {data?.overview}
         </div>
       )}

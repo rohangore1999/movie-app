@@ -1,72 +1,68 @@
-# Getting Started with Create React App
+# Hosted App
+https://movie-flixapp.netlify.app/
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# To Run the App
 
-## Available Scripts
+## Install the node_modules
+### `npm i`
 
-In the project directory, you can run:
 
-### `npm start`
+## To start the React Vite App
+### `npm run dev`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Tech Stack
+```
+- React
+- Vite [for production build]
+- Tailwind Css (used only for styling) [css framework]
+- State Management [React Context]
+```
 
-### `npm test`
+# Requirements Covered
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Layout and UI
+```
+- Code Splitting [Improve Performance].
+- Reusable UI Component.
+- Used proper folder structure for better readability of the code and followed Single Responsibilty Principle.
+```
 
-### `npm run build`
+### Default page load state
+```
+- Displayed list of Movies in descending Order of Popularity.
+- Shown Movie Title, Image, Genre, Short Description [on Hover of each card].
+- By Default Movies loaded for year 2012, load movies of previous year when user scrolls up and load movies of next year when user scrolls down until the current year.
+- Shown 20 movies for each year.
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### API Integration
+```
+- Used Axios to call an API. Used interceptors for handling errors like 5xx, 4xx also display errors in alert with sufficiant details(Error Code, Message, api).
+- To fetch Movies.
+- To fetch Genre of the Movies.
+- To fetch the searched Movies.
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Genre Filter
+```
+- Filtering of multiple movies based on checkbox [Genres].
+- Fetched all the Genres from the given tmdb api.
+- When a user selects one or more genres, the list should only display movies of
+the selected genres.
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Bonus (Optional) - Covered
+```
+- Search Functionality which searches for the movie based on the search string
+and displays an infinite loading list of movies which matches the search.
+- When scroll down it fetch the next page movie.
+```
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# E-commerce-Assignment
-# movie-app
+# Requirements NOT Covered
+```
+- React virtualization for smooth scrolling. [Commented the working code for mobile]. Not able to make list responsive at the time of React Virtualization.
+- Typescript support.
+- Loading state can be improve move for better user experience.
+```
