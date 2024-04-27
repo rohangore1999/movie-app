@@ -22,7 +22,7 @@ export default MovieCards;
 
 // -----------------------------------------------------------------------------------------------
 
-// REACT Virtualization: TODO - Need to make responsive by adding dynamic values.
+// REACT Virtualization: TODO - Need to make page responsive by adding dynamic values.
 // Currently it only supports Virtualization for particular resolution of mobile
 
 // import React, { useState, useEffect } from "react";

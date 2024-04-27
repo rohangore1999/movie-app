@@ -42,12 +42,13 @@ const MovieLists = () => {
   const sentinelBottomRef = useRef(null);
   const scrollRef = useRef(null);
   const yearListRef = useRef([2012]);
-  const movieRef = useRef(null);
+  const searchedMovieRef = useRef(null);
   const pageRef = useRef(1);
 
-  const { data: selectedGenre, state } = useContext(Context);
-  const { searchedMovie } = state;
+  const { state } = useContext(Context);
+  const { searchedMovie, selectedGenre } = state;
 
+  // To simulate scroll behavior when page mount
   useEffect(() => {
     // Scroll to a specific position when the page is reloaded
     if (scrollDirection === "down" && !searchedMovie) {
@@ -60,13 +61,15 @@ const MovieLists = () => {
     }
   }); // This effect runs only once after the component mounts
 
+  // To call an movie API's
   useEffect(() => {
     setLoading(true);
 
+    // If searched keyword is present
     if (!!searchedMovie) {
       setIsScrolled(false);
 
-      movieRef.current = searchedMovie;
+      searchedMovieRef.current = searchedMovie;
 
       debouncedFetchSearchedMovie(fetchSearchedMovie, searchedMovie, pageNo);
 
@@ -76,14 +79,19 @@ const MovieLists = () => {
     fetchData(year, selectedGenre);
   }, [year, selectedGenre, searchedMovie, pageNo]);
 
+  // To handle api call if user's scroll up or down [Intersection Observer]
   useEffect(() => {
+    // To ignore multiple back to back api calls used Debounce
     const debounceHandleIntersect = _debounce(handleIntersect, 1500);
 
+    // Creating an Instance of `IntersectionObserver`
     const observer = new IntersectionObserver(
       (entries) => {
+        // Callback, which trigger when observed (sentinelTopRef | sentinelBottomRef) hits.
         debounceHandleIntersect(entries);
       },
       {
+        // options
         root: null,
         rootMargin: "0px",
         threshold: 1.0,
@@ -91,16 +99,17 @@ const MovieLists = () => {
     );
 
     if (sentinelTopRef.current) {
-      // invoke callback, on visible
+      // invoke callback, on visible of sentinelTopRef
       observer.observe(sentinelTopRef.current);
     }
 
     if (sentinelBottomRef.current) {
-      // invoke callback, on visible
+      // invoke callback, on visible of sentinelBottomRef
       observer.observe(sentinelBottomRef.current);
     }
 
     return () => {
+      // Cleaning up the observer when component unmount
       if (sentinelTopRef.current) {
         observer.unobserve(sentinelTopRef.current);
       }
@@ -114,7 +123,7 @@ const MovieLists = () => {
   const handleIntersect = (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        // Check for element isIntersecting: true
+        // Check for element isIntersecting
         if (entry.target.id === "sentinel-top") {
           // check for target id
           const nextYear = yearListRef.current[0] + 1;
@@ -123,12 +132,14 @@ const MovieLists = () => {
 
           if (!yearListRef.current.includes(nextYear)) {
             yearListRef.current = [nextYear, ...yearListRef.current];
+
             setYear(nextYear);
           }
         }
 
         if (entry.target.id === "sentinel-bottom") {
-          if (!!movieRef.current) {
+          if (!!searchedMovieRef.current) {
+            // For searched movies, when user scrolls down it should get new page data
             setIsScrolled(true);
 
             pageRef.current += 1;
@@ -151,17 +162,23 @@ const MovieLists = () => {
     });
   };
 
+  // Fetch Movies based on searched keywords
   const fetchSearchedMovie = async (searchQuery, pageNo) => {
     const data = await getMovieBySearch(searchQuery, pageNo);
+
     setSearchedMovieData((previousSearchedMovieData) => {
       if (isScrolled) {
+        // User has scrolled down, then append new movie data
         return [...previousSearchedMovieData, ..._get(data, "results", [])];
       }
+
       return _get(data, "results", []);
     });
+
     setLoading(false);
   };
 
+  // Fetch Movies based on [ scroll up | scroll down | Genres ]
   const fetchData = async (year, selectedGenre) => {
     const queryObj = { with_genres: selectedGenre };
 
@@ -172,7 +189,7 @@ const MovieLists = () => {
         Number(year) <
         Number(prevData[0]?.data[0]?.release_date?.substring(0, 4))
       ) {
-        // If current year is less then append the data (scroll down)
+        // If current year is less than previous, then append the data (scroll down)
         return [...prevData, { year, data: [..._get(data, "results", [])] }];
       } else if (
         Number(year) >
@@ -182,7 +199,7 @@ const MovieLists = () => {
           ]?.release_date.substring(0, 4)
         )
       ) {
-        // If current year is more then prepend the data (scroll up)
+        // If current year is more than previous, then prepend the data (scroll up)
         return [{ year, data: [..._get(data, "results", [])] }, ...prevData];
       }
 

@@ -6,6 +6,8 @@ import MovieLists from "./components/MovieLists";
 
 // Services
 import { getGenreList } from "../../services/movies";
+
+// Constants
 import { ACTION_TYPES } from "../../reducers/constants";
 
 // Context

@@ -6,11 +6,14 @@ import { Context } from "../../context/Context";
 // Constants
 import { ACTION_TYPES } from "../../reducers/constants";
 
+// Helpers
+import { getSelectedGenreId } from "./helpers";
+
 const Dropdown = ({ text, options }) => {
   const [state, setstate] = useState(false);
   const [selected, setSelected] = useState([]);
 
-  const { setData, dispatch } = useContext(Context);
+  const { dispatch } = useContext(Context);
 
   const handleSelected = (e, option) => {
     const isChecked = e.target.checked;
@@ -32,11 +35,7 @@ const Dropdown = ({ text, options }) => {
     setSelected(updatedSelected);
 
     // Filtering the value of Selected Genre
-    const selectedGenreId = updatedSelected
-      .filter((updatedSelectedObj) => updatedSelectedObj.active)
-      .map((updatedSelectedObj) => updatedSelectedObj.value);
-
-    setData(selectedGenreId);
+    const selectedGenreId = getSelectedGenreId(updatedSelected);
 
     dispatch({ type: ACTION_TYPES.GENRE, payload: selectedGenreId });
   };

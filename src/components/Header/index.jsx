@@ -7,6 +7,8 @@ import SearchBox from "../SearchBox";
 
 // Context
 import { Context } from "../../context/Context";
+
+// Helpers
 import { modifyGenresList } from "./helpers";
 
 const Header = () => {

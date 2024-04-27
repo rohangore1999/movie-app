@@ -1,17 +1,18 @@
 import React, { useContext, useState } from "react";
 
-// Context
-import { Context } from "../../context/Context";
-
 // Icons
 import { FaSearch } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+
+// Context
+import { Context } from "../../context/Context";
 
 // Constants
 import { ACTION_TYPES } from "../../reducers/constants";
 
 const SearchBox = () => {
   const [inputValue, setInputValue] = useState("");
+
   const { dispatch } = useContext(Context);
 
   const handleChange = (e) => {
