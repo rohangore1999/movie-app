@@ -4,6 +4,7 @@ https://movie-flixapp.netlify.app/
 # To Run the App
 
 - **Use Node version above 18**
+- **Make sure that TMDB apis are working in your network or use VPN**
 
 ## Install the node_modules
 ### `npm i`
