@@ -48,8 +48,8 @@ https://movie-flixapp.netlify.app/
 the selected genres.
 
 ### Bonus (Optional) - Covered
-- Search Functionality which searches for the movie based on the search string
-and displays an infinite loading list of movies which matches the search.
+- Search Functionality which searches for the movie based on the keywords and displays an infinite loading list of movies which matches the search.
+- Implemented debounce on search.
 - When scroll down it fetch the next page movie.
 
 
