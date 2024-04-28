@@ -30,17 +30,17 @@ const SearchBox = () => {
   };
 
   return (
-    <div className="relative rounded overflow-hidden flex">
+    <div className="relative rounded overflow-hidden flex z-50">
       <input
         type="text"
-        className="pr-6 pl-1 py-2 text-black w-32 h-8 md:w-64 z-50"
+        className="pr-6 pl-1 py-2 text-black w-32 h-8 md:w-64"
         onChange={handleChange}
         value={inputValue}
       />
 
       {inputValue ? (
         <IoClose
-          className="absolute text-black top-2 right-1 hover:scale-150 hover:cursor-pointer "
+          className="absolute text-black top-2 right-1 hover:scale-150 hover:cursor-pointer"
           onClick={handleClear}
         />
       ) : (

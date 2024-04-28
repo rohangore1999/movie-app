@@ -32,7 +32,9 @@ const debouncedFetchSearchedMovie = _debounce(
 const MovieLists = () => {
   const [movieData, setMovieData] = useState([]);
   const [searchedMovieData, setSearchedMovieData] = useState([]);
+  const [genreMovieData, setGenreMovieData] = useState([]);
   const [year, setYear] = useState(2012);
+  const [genreYear, setGenreYear] = useState(2012);
   const [loading, setLoading] = useState(false);
   const [scrollDirection, setScrollDirection] = useState("down");
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,8 +44,8 @@ const MovieLists = () => {
   const sentinelBottomRef = useRef(null);
   const scrollRef = useRef(null);
   const yearListRef = useRef([2012]);
+  const yearListGenreRef = useRef([2012]);
   const searchedMovieRef = useRef(null);
-  const pageRef = useRef(1);
 
   const { state } = useContext(Context);
   const { searchedMovie, selectedGenre } = state;
@@ -51,7 +53,7 @@ const MovieLists = () => {
   // To simulate scroll behavior when page mount
   useEffect(() => {
     // Scroll to a specific position when the page is reloaded
-    if (scrollDirection === "down" && !searchedMovie) {
+    if (scrollDirection === "down" && !searchedMovieRef.current) {
       window.scrollTo({ top: 50 });
     }
 
@@ -65,19 +67,27 @@ const MovieLists = () => {
   useEffect(() => {
     setLoading(true);
 
+    searchedMovieRef.current = searchedMovie;
+
     // If searched keyword is present
     if (!!searchedMovie) {
       setIsScrolled(false);
-
-      searchedMovieRef.current = searchedMovie;
 
       debouncedFetchSearchedMovie(fetchSearchedMovie, searchedMovie, pageNo);
 
       return;
     }
 
-    fetchData(year, selectedGenre);
-  }, [year, selectedGenre, searchedMovie, pageNo]);
+    if (!!selectedGenre.length) {
+      setLoading(true);
+
+      fetchMovieByGenre(genreYear, selectedGenre);
+
+      return;
+    }
+
+    fetchData(year);
+  }, [year, genreYear, selectedGenre, searchedMovie, pageNo]);
 
   // To handle api call if user's scroll up or down [Intersection Observer]
   useEffect(() => {
@@ -118,44 +128,75 @@ const MovieLists = () => {
         observer.unobserve(sentinelBottomRef.current);
       }
     };
-  }, []);
+  }, [searchedMovieRef.current, selectedGenre]);
 
   const handleIntersect = (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         // Check for element isIntersecting
         if (entry.target.id === "sentinel-top") {
-          // check for target id
-          const nextYear = yearListRef.current[0] + 1;
+          if (selectedGenre.length) {
+            // check for target id
+            const nextYear = yearListGenreRef.current[0] + 1;
 
-          setScrollDirection("down");
+            setScrollDirection("down");
 
-          if (!yearListRef.current.includes(nextYear)) {
-            yearListRef.current = [nextYear, ...yearListRef.current];
+            if (!yearListGenreRef.current.includes(nextYear)) {
+              yearListGenreRef.current = [
+                nextYear,
+                ...yearListGenreRef.current,
+              ];
 
-            setYear(nextYear);
+              setGenreYear(nextYear);
+            }
+          } else {
+            // check for target id
+            const nextYear = yearListRef.current[0] + 1;
+
+            setScrollDirection("down");
+
+            if (!yearListRef.current.includes(nextYear)) {
+              yearListRef.current = [nextYear, ...yearListRef.current];
+
+              setYear(nextYear);
+            }
           }
         }
 
         if (entry.target.id === "sentinel-bottom") {
+          setScrollDirection("up");
+
           if (!!searchedMovieRef.current) {
             // For searched movies, when user scrolls down it should get new page data
             setIsScrolled(true);
 
-            pageRef.current += 1;
-            setPageNo(pageRef.current);
+            // pageRef.current += 1;
+            setPageNo((prevPage) => prevPage + 1);
 
             return;
           }
 
-          const prevYear =
-            yearListRef.current[yearListRef.current.length - 1] - 1;
+          if (selectedGenre.length) {
+            const prevYear =
+              yearListGenreRef.current[yearListGenreRef.current.length - 1] - 1;
 
-          setScrollDirection("up");
+            if (!yearListGenreRef.current.includes(prevYear)) {
+              yearListGenreRef.current = [
+                ...yearListGenreRef.current,
+                prevYear,
+              ];
 
-          if (!yearListRef.current.includes(prevYear)) {
-            yearListRef.current = [...yearListRef.current, prevYear];
-            setYear(prevYear);
+              setGenreYear(prevYear);
+            }
+          } else {
+            const prevYear =
+              yearListRef.current[yearListRef.current.length - 1] - 1;
+
+            if (!yearListRef.current.includes(prevYear)) {
+              yearListRef.current = [...yearListRef.current, prevYear];
+
+              setYear(prevYear);
+            }
           }
         }
       }
@@ -178,11 +219,43 @@ const MovieLists = () => {
     setLoading(false);
   };
 
-  // Fetch Movies based on [ scroll up | scroll down | Genres ]
-  const fetchData = async (year, selectedGenre) => {
+  const fetchMovieByGenre = async (year, selectedGenre) => {
     const queryObj = { with_genres: selectedGenre };
 
     const data = await getMovies(year, queryObj);
+
+    setGenreMovieData((prevData) => {
+      if (
+        Number(year) <
+        Number(prevData[0]?.data[0]?.release_date?.substring(0, 4))
+      ) {
+        // If current year is less than previous, then append the data (scroll down)
+        return [...prevData, { year, data: [..._get(data, "results", [])] }];
+      } else if (
+        Number(year) >
+        Number(
+          prevData[prevData.length - 1]?.data[
+            prevData.length - 1
+          ]?.release_date.substring(0, 4)
+        )
+      ) {
+        // If current year is more than previous, then prepend the data (scroll up)
+        return [{ year, data: [..._get(data, "results", [])] }, ...prevData];
+      }
+
+      return [{ year, data: _get(data, "results", []) }];
+    });
+
+    yearListRef.current = [2012];
+
+    setYear(2012);
+    setMovieData([]);
+    setLoading(false);
+  };
+
+  // Fetch Movies based on [ scroll up | scroll down | Genres ]
+  const fetchData = async (year) => {
+    const data = await getMovies(year);
 
     setMovieData((prevData) => {
       if (
@@ -206,6 +279,10 @@ const MovieLists = () => {
       return [{ year, data: _get(data, "results", []) }];
     });
 
+    yearListGenreRef.current = [2012];
+
+    setGenreYear(2012);
+    setGenreMovieData([]);
     setLoading(false);
   };
 
@@ -216,21 +293,29 @@ const MovieLists = () => {
 
   return (
     <>
-      <div
-        className="mb-20 z-50 absolute top-0"
-        id="sentinel-top"
-        ref={sentinelTopRef}
-      />
+      {!searchedMovie && (
+        <div
+          className="mb-20 z-50 absolute top-0"
+          id="sentinel-top"
+          ref={sentinelTopRef}
+        />
+      )}
 
       {/* Enable loader */}
       {loading && <Loader />}
 
       <section
-        className={`p-5 ${searchedMovie ? "mt-0" : "mt-10"}`}
+        className={`h-full p-5 ${searchedMovie ? "mt-0" : "mt-10"}`}
         ref={scrollRef}
       >
         {!!searchedMovie ? (
           <MovieCards title="Searched Movie" movieData={searchedMovieData} />
+        ) : !!genreMovieData.length ? (
+          genreMovieData.map((movie, idx) => (
+            <Fragment key={idx}>
+              <MovieCards title={movie.year} movieData={movie.data} />
+            </Fragment>
+          ))
         ) : (
           movieData.map((movie, idx) => (
             <Fragment key={idx}>

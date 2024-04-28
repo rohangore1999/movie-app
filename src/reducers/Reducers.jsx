@@ -12,7 +12,7 @@ export const Reducers = (previousState, action) => {
     case ACTION_TYPES.GENRE:
       return {
         ...previousState,
-        selectedGenre: [...previousState.selectedGenre, action.payload],
+        selectedGenre: action.payload,
       };
 
     case ACTION_TYPES.SEARCHED_MOVIE:

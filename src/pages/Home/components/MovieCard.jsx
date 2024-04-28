@@ -63,7 +63,7 @@ const MovieCard = ({ data }) => {
       </div>
 
       {showOverview && (
-        <div className="absolute top-1 p-1 text-xs font-bold z-50 overflow-y-scroll h-60 md:p-5 md:text-base">
+        <div className="absolute top-1 p-1 text-xs font-bold z-50 overflow-y-scroll h-60 md:p-5 md:text-base md:h-96">
           {data?.overview}
         </div>
       )}
