@@ -56,4 +56,3 @@ and displays an infinite loading list of movies which matches the search.
 # Requirements NOT Covered
 - React virtualization for smooth scrolling. [Commented the working code for mobile]. Not able to make list responsive at the time of React Virtualization.
 - Typescript support not implemented.
-- Loading state can be improve for better user experience.
